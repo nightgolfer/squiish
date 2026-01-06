@@ -177,20 +177,24 @@ const getOutputFilename = (
   filenameSettings: FilenameSettings,
   sequenceIndex: number,
   sequenceTotal: number,
+  encoderState?: EncoderState,
 ): string => {
   if (!filenameSettings.enabled) return sourceFilename;
   const { base, ext } = splitFilename(sourceFilename);
+  const outputExt = encoderState
+    ? `.${encoderMap[encoderState.type].meta.extension}`
+    : ext;
   const append = filenameSettings.append || '';
   const rename = filenameSettings.rename || '';
   if (!rename) {
-    return `${base}${append}${ext}`;
+    return `${base}${append}${outputExt}`;
   }
   if (sequenceTotal <= 1) {
-    return `${rename}${append}${ext}`;
+    return `${rename}${append}${outputExt}`;
   }
   const digits = String(Math.max(1, sequenceTotal)).length;
   const sequence = String(sequenceIndex + 1).padStart(digits, '0');
-  return `${rename}_${sequence}${append}${ext}`;
+  return `${rename}_${sequence}${append}${outputExt}`;
 };
 
 async function processImage(
@@ -371,9 +375,16 @@ export default class Compress extends Component<Props, State> {
   private getOutputFilenameForFile(
     file: File,
     filenameSettings: FilenameSettings,
+    encoderState?: EncoderState,
   ) {
     const { index, total } = this.getSequenceInfo(file);
-    return getOutputFilename(file.name, filenameSettings, index, total);
+    return getOutputFilename(
+      file.name,
+      filenameSettings,
+      index,
+      total,
+      encoderState,
+    );
   }
 
   private onEncoderTypeChange = (index: 0 | 1, newType: OutputType): void => {
@@ -703,6 +714,7 @@ export default class Compress extends Component<Props, State> {
     const outputFilename = this.getOutputFilenameForFile(
       file,
       side.latestSettings.filename,
+      selectedEncoder,
     );
 
     // No encoder selected, original image
@@ -997,6 +1009,7 @@ export default class Compress extends Component<Props, State> {
           const outputFilename = this.getOutputFilenameForFile(
             source.file,
             filenameSettings,
+            jobState.encoderState,
           );
           file = filenameSettings.enabled
             ? new File([source.file], outputFilename, {
@@ -1057,6 +1070,7 @@ export default class Compress extends Component<Props, State> {
             const outputFilename = this.getOutputFilenameForFile(
               source.file,
               currentState.sides[sideIndex].latestSettings.filename,
+              jobState.encoderState,
             );
             file = await compressImage(
               signal,
@@ -1221,6 +1235,7 @@ export default class Compress extends Component<Props, State> {
         const outputFilename = this.getOutputFilenameForFile(
           this.sourceFile,
           side.latestSettings.filename,
+          side.latestSettings.encoderState,
         );
 
         if (side.downloadUrl) {
@@ -1335,6 +1350,7 @@ export default class Compress extends Component<Props, State> {
           downloadName={this.getOutputFilenameForFile(
             this.sourceFile,
             side.latestSettings.filename,
+            side.latestSettings.encoderState,
           )}
           showSnack={this.props.showSnack}
           flipSide={mobileView || index === 1}

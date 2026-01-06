@@ -225,7 +225,10 @@ export default class Intro extends Component<Props, State> {
       return;
     }
 
-    this.props.onFiles!([new File([blob], 'image.unknown')]);
+    const ext = blob.type.startsWith('image/')
+      ? blob.type.split('/')[1].split('+')[0]
+      : 'unknown';
+    this.props.onFiles!([new File([blob], `image.${ext}`)]);
   };
 
   render(
@@ -301,12 +304,18 @@ export default class Intro extends Component<Props, State> {
                 ) : (
                   'Paste'
                 )}
+                <br />
+                <span class={style.dropText}>multiple files!</span>
               </div>
             </div>
           </div>
         </div>
         <div class={style.demosContainer}>
-          <svg viewBox="0 0 1920 140" class={style.topWave}>
+          <svg
+            viewBox="0 0 1920 140"
+            class={style.topWave}
+            preserveAspectRatio="none"
+          >
             <path
               d="M1920 0l-107 28c-106 29-320 85-533 93-213 7-427-36-640-50s-427 0-533 7L0 85v171h1920z"
               class={style.subWave}
@@ -350,7 +359,11 @@ export default class Intro extends Component<Props, State> {
         </div>
 
         <div class={style.bottomWave}>
-          <svg viewBox="0 0 1920 79" class={style.topWave}>
+          <svg
+            viewBox="0 0 1920 79"
+            class={style.topWave}
+            preserveAspectRatio="none"
+          >
             <path
               d="M0 59l64-11c64-11 192-34 320-43s256-5 384 4 256 23 384 34 256 21 384 14 256-30 320-41l64-11v94H0z"
               class={style.infoWave}
