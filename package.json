@@ -14,6 +14,9 @@
     "serve": "serve --listen=$DEV_PORT --config ../../../serve.json .tmp/build/static",
     "prepare": "husky install"
   },
+  "dependencies": {
+    "serve-handler": "^6.1.5"
+  },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^17.0.0",
     "@rollup/plugin-node-resolve": "^11.1.0",
@@ -28,7 +31,7 @@
     "cssnano": "^4.1.10",
     "dedent": "^0.7.0",
     "del": "^5.1.0",
-    "electron": "^31.2.1",
+    "electron": "^28.3.3",
     "electron-builder": "^24.13.3",
     "file-drop-element": "^1.0.1",
     "husky": "^7.0.2",
@@ -50,7 +53,6 @@
     "prettier": "^2.4.1",
     "rollup": "^2.38.0",
     "serve": "^11.3.2",
-    "serve-handler": "^6.1.5",
     "typescript": "^4.4.4",
     "wasm-feature-detect": "^1.2.11",
     "which": "^2.0.2"

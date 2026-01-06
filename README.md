@@ -91,9 +91,9 @@ To package a standalone Electron app (macOS by default):
    ```
 
 Artifacts are written to `dist/`. These instructions assume macOS; for
-Windows/Linux you generally need to build on the target OS. On macOS,
-signing/notarization is optional for local use but required for clean
-distribution.
+Windows/Linux you generally need to build on the target OS. Packaged builds
+target macOS 12+ (Electron 28). On macOS, signing/notarization is optional for
+local use but required for clean distribution.
 
 # Developing (unaltered from original README.md; YMMV!)
 
