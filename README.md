@@ -2,7 +2,7 @@
 
 ![Squiish logo](src/shared/prerendered-app/Intro/imgs/logo-with-text.svg)
 
-**[Squiish](https://github.com/nightgolfer/squiish)** is an image compression web app that reduces image sizes through numerous formats **in bulk**, and with a few extra features added.
+**[Squiish]** is an image compression web app that reduces image sizes through numerous formats **in bulk**, and with a few extra features added.
 
 It is based on [squoosh-multiple-export](https://github.com/Khongchai/squoosh-multiple-export) by [Khongchai](https://github.com/Khongchai), which is forked from [Squoosh](https://github.com/GoogleChromeLabs/squoosh) by [Google Chrome Labs](https://github.com/GoogleChromeLabs).
 
@@ -29,6 +29,7 @@ Some thoughts on future modifications, but do keep in mind that this project is 
 - Swap 'Download all X files' button and regular download button functionality (change the former to 'Download current file' and add more arrows to the latter).
 - Add better progress indicators ('Processing X', check off processed files on a list, spinning wheel, make interface inactive, percentage done indicator, etc.).
 - Dark mode?
+- ~~Launch on Vercel~~ (Squiish v.0.1.3 is now live on Vercel: https://squiish.vercel.app)
 - ~~Make standalone app version~~ (completed in v.0.1.3, wrapped with Electron for macOS)
 
 # Privacy
@@ -36,6 +37,11 @@ Some thoughts on future modifications, but do keep in mind that this project is 
 Squiish does not send your image to a server. All image compression processes locally.
 
 The original version had Google telemetry included; this has been stripped out of Squiish.
+
+# Use online
+
+- You can use Squiish online here: https://squiish.vercel.app
+- (optional) Install the PWA from https://squiish.vercel.app by clicking on the 'Install' button in the top left corner (works in Chrome, untested in other browsers) to run it as a local app.
 
 # Running locally (serve)
 
@@ -127,3 +133,5 @@ Squoosh is an open-source project that appreciates all community involvement. To
 - original Squoosh code: https://github.com/GoogleChromeLabs/squoosh
 - squoosh-multiple-export code: https://github.com/Khongchai/squoosh-multiple-export
 - squiish code: https://github.com/nightgolfer/squiish
+
+[squiish]: https://squiish.vercel.app/
