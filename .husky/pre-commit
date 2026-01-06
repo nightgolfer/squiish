@@ -1,1 +1,5 @@
+#!/bin/sh
+PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+export PATH
+
 npx lint-staged
