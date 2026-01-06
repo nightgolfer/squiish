@@ -1,4 +1,4 @@
-# Squiish! v.0.1.4
+# Squiish! v.0.1.5
 
 ![Squiish logo](src/shared/prerendered-app/Intro/imgs/logo-with-text.svg)
 
@@ -25,13 +25,14 @@ In addition to the original Squoosh features, Squiish has been modified with the
 
 Some thoughts on future modifications, but do keep in mind that this project is being 'developed' in <span title="Don't Hold Your Breath">**DHYB**</span>-mode, so they may never happen ...
 
-- Add 'Resize to: Short edge' option in **Edit > Resize > Resize to**
-- Swap 'Download all X files' button and regular download button functionality (change the former to 'Download current file' and add more arrows to the latter).
-- Add better progress indicators ('Processing X', check off processed files on a list, spinning wheel, make interface inactive, percentage done indicator, etc.).
+- Add 'Resize to: Short edge' option in **Edit > Resize > Resize to**.
+- Add 'Resize to: Height' and 'Resize to: Width' (scale all files proportionally to same height or width).
 - Dark mode?
 - ZIP download option?
+- ~~Swap 'Download all X files' button and regular download button functionality (change the former to 'Download current file' and add more arrows to the latter).~~ (swapped buttons in v.0.1.5)
+- ~~Add better progress indicators ('Processing X', check off processed files on a list, spinning wheel, make interface inactive, percentage done indicator, etc.).~~ (added spinners and disabling buttons while downloading in v.0.1.5)
 - ~~Launch on Vercel~~ (Squiish v.0.1.3 is now live on Vercel: https://squiish.vercel.app)
-- ~~Make standalone app version~~ (completed in v.0.1.3, wrapped with Electron for macOS)
+- ~~Make standalone app version~~ (completed in v.0.1.3, wrapped with Electron for macOS; see 'Packaging Electron' below)
 
 # Privacy
 

@@ -20,7 +20,7 @@
 }
 
 .download-all-button-left {
-  background-color: var(--hot-pink);
+  background-color: var(--blue);
   border: none;
   padding: 10px 20px;
   text-align: center;
@@ -40,11 +40,11 @@
 }
 
 .download-all-button-right:hover {
-  background-color: var(--pink);
+  background-color: var(--deep-blue);
 }
 
 .download-all-button-right {
-  background-color: var(--hot-pink);
+  background-color: var(--blue);
   border: none;
   padding: 10px 20px;
   text-align: center;
@@ -56,6 +56,7 @@
   border-radius: 4px;
   transition: background-color 0.3s ease;
   color: var(--white);
+  position: relative;
 
   @media (max-width: 599px) {
     width: 100%;
@@ -64,7 +65,21 @@
 }
 
 .download-all-button-left:hover {
-  background-color: var(--pink);
+  background-color: var(--deep-blue);
+}
+
+.download-all-button-left:disabled,
+.download-all-button-right:disabled {
+  cursor: default;
+  opacity: 0.7;
+}
+
+.download-single-spinner {
+  --size: 14px;
+  --color: var(--white);
+  position: relative;
+  margin-left: 8px;
+  top: 2px;
 }
 
 .options {

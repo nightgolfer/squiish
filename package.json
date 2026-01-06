@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "squoosh",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Squiish is an image compression web app that reduces image sizes through numerous formats in bulk. Based on a Squoosh fork.",
   "author": "nightgolfer (https://github.com/nightgolfer)",
   "main": "electron/main.js",

@@ -276,6 +276,26 @@
   }
 }
 
+.download-single {
+  --hot-theme-color: var(--blue);
+}
+
+.download-multi {
+  --hot-theme-color: var(--hot-pink);
+
+  .download-icon svg {
+    --size: 38px;
+    top: 0;
+    left: 0;
+
+    @media (min-width: 600px) {
+      --size: 54px;
+      top: 0;
+      left: 0;
+    }
+  }
+}
+
 .download-disable {
   composes: download;
 

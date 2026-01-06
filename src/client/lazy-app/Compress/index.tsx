@@ -23,6 +23,7 @@ import Select from './Options/Select';
 import Output from './Output';
 import ResultCache from './result-cache';
 import Results from './Results';
+import 'shared/custom-els/loading-spinner';
 import { compressImage } from './stages/compress-stage';
 import { decodeBitmap, decodeImage } from './stages/decode-stage';
 import { preprocessImage } from './stages/preprocess-stage';
@@ -77,6 +78,7 @@ interface State {
   mobileView: boolean;
   preprocessorState: PreprocessorState;
   encodedPreprocessorState?: PreprocessorState;
+  downloadingSingle: [boolean, boolean];
 }
 
 interface MainJob {
@@ -115,6 +117,10 @@ const defaultFilenameSettings: FilenameSettings = {
   append: '_sqsh',
   rename: '',
 };
+const defaultFilenameSettingsOriginal: FilenameSettings = {
+  ...defaultFilenameSettings,
+  append: '',
+};
 
 const buildDefaultSideSettings = (
   encoderState?: EncoderState,
@@ -122,7 +128,11 @@ const buildDefaultSideSettings = (
   processorState: defaultProcessorState,
   encoderState,
   bulkProcessing: { ...defaultBulkProcessingSettings },
-  filename: { ...defaultFilenameSettings },
+  filename: {
+    ...(encoderState
+      ? defaultFilenameSettings
+      : defaultFilenameSettingsOriginal),
+  },
 });
 
 const normalizeSideSettings = (
@@ -143,15 +153,13 @@ const normalizeSideSettings = (
     ...defaults.filename,
     ...(settings && settings.filename),
     append:
-      settings &&
-      settings.filename &&
-      (settings.filename as { append?: string }).append !== undefined
-        ? (settings.filename as { append?: string }).append
-        : settings &&
-          settings.filename &&
-          (settings.filename as { prepend?: string }).prepend !== undefined
-        ? (settings.filename as { prepend?: string }).prepend
-        : defaults.filename.append,
+      (settings &&
+        settings.filename &&
+        (settings.filename as { append?: string }).append) ??
+      (settings &&
+        settings.filename &&
+        (settings.filename as { prepend?: string }).prepend) ??
+      defaults.filename.append,
   },
 });
 
@@ -265,6 +273,7 @@ export default class Compress extends Component<Props, State> {
     source: undefined,
     loading: false,
     preprocessorState: defaultPreprocessorState,
+    downloadingSingle: [false, false],
     // Tasking catched side settings if available otherwise taking default settings
     sides: [
       (() => {
@@ -1173,15 +1182,76 @@ export default class Compress extends Component<Props, State> {
         await downloadBulk(promises);
 
         if (downloadCount === this.files.length) {
-          this.props.showSnack('All files have been saved successfully!');
+          await this.props.showSnack(
+            'All files have been saved successfully!',
+            {
+              timeout: 1500,
+            },
+          );
         } else {
-          this.props.showSnack('Some files could not be processed');
+          await this.props.showSnack('Some files could not be processed', {
+            timeout: 1500,
+          });
         }
       } catch (err) {
         console.error('Error saving files:', err);
-        this.props.showSnack(
+        await this.props.showSnack(
           'There was an error saving the files. Please try again.',
+          { timeout: 1500 },
         );
+      }
+    };
+  }
+
+  private handleDownloadSingle(sideIndex: number) {
+    return async () => {
+      if (this.state.downloadingSingle[sideIndex]) return;
+
+      this.setState((currentState) => {
+        const downloadingSingle = [...currentState.downloadingSingle] as [
+          boolean,
+          boolean,
+        ];
+        downloadingSingle[sideIndex] = true;
+        return { downloadingSingle };
+      });
+
+      try {
+        const side = this.state.sides[sideIndex];
+        const outputFilename = this.getOutputFilenameForFile(
+          this.sourceFile,
+          side.latestSettings.filename,
+        );
+
+        if (side.downloadUrl) {
+          this.downloadFromUrl(side.downloadUrl, outputFilename);
+          await this.props.showSnack('Download completed', { timeout: 1500 });
+          return;
+        }
+
+        const file = await this.immediateImageUpdate(
+          this.sourceFile,
+          sideIndex,
+        );
+        if (!file) {
+          await this.props.showSnack('No file ready to download', {
+            timeout: 1500,
+          });
+          return;
+        }
+        const url = URL.createObjectURL(file);
+        this.downloadFromUrl(url, outputFilename);
+        URL.revokeObjectURL(url);
+        await this.props.showSnack('Download completed', { timeout: 1500 });
+      } finally {
+        this.setState((currentState) => {
+          const downloadingSingle = [...currentState.downloadingSingle] as [
+            boolean,
+            boolean,
+          ];
+          downloadingSingle[sideIndex] = false;
+          return { downloadingSingle };
+        });
       }
     };
   }
@@ -1202,7 +1272,14 @@ export default class Compress extends Component<Props, State> {
 
   render(
     { onBack }: Props,
-    { loading, sides, source, mobileView, preprocessorState }: State,
+    {
+      loading,
+      sides,
+      source,
+      mobileView,
+      preprocessorState,
+      downloadingSingle,
+    }: State,
   ) {
     const [leftSide, rightSide] = sides;
     const [leftImageData, rightImageData] = sides.map((i) => i.data);
@@ -1227,18 +1304,23 @@ export default class Compress extends Component<Props, State> {
       />
     ));
 
+    const hasMultipleFiles = this.files.length > 1;
     const results = sides.map((side, index) => (
       <Fragment key={index}>
-        {this.files.length > 1 && (
+        {hasMultipleFiles && (
           <button
-            onClick={this.handleDownloadAll(index)}
+            onClick={this.handleDownloadSingle(index)}
+            disabled={downloadingSingle[index]}
             class={
               index === 0
                 ? style.downloadAllButtonLeft
                 : style.downloadAllButtonRight
             }
           >
-            {`Download All ${this.files.length} Files `}
+            Download single file
+            {downloadingSingle[index] && (
+              <loading-spinner class={style.downloadSingleSpinner} />
+            )}
           </button>
         )}
         <Results
@@ -1246,6 +1328,15 @@ export default class Compress extends Component<Props, State> {
           imageFile={side.file}
           source={source}
           loading={loading || side.loading}
+          isMultiDownload={hasMultipleFiles}
+          onDownloadClick={
+            hasMultipleFiles ? this.handleDownloadAll(index) : undefined
+          }
+          downloadName={this.getOutputFilenameForFile(
+            this.sourceFile,
+            side.latestSettings.filename,
+          )}
+          showSnack={this.props.showSnack}
           flipSide={mobileView || index === 1}
           typeLabel={
             side.latestSettings.encoderState
