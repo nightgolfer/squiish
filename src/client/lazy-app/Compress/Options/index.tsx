@@ -47,7 +47,7 @@ interface BulkProcessingSettings {
 
 interface FilenameSettings {
   enabled: boolean;
-  prepend: string;
+  append: string;
   rename: string;
 }
 
@@ -177,11 +177,11 @@ export default class Options extends Component<Props, State> {
     });
   };
 
-  private onFilenamePrependChange = (event: Event) => {
+  private onFilenameAppendChange = (event: Event) => {
     const el = event.currentTarget as HTMLInputElement;
     this.props.onFilenameOptionsChange(this.props.index, {
       ...this.props.filenameSettings,
-      prepend: el.value,
+      append: el.value,
     });
   };
 
@@ -359,13 +359,13 @@ export default class Options extends Component<Props, State> {
                       />
                     </label>
                     <label class={style.optionTextFirst}>
-                      Prepend:
+                      Append:
                       <input
                         class={style.textField}
-                        name="filenamePrepend"
+                        name="filenameAppend"
                         type="text"
-                        value={filenameSettings.prepend}
-                        onInput={this.onFilenamePrependChange}
+                        value={filenameSettings.append}
+                        onInput={this.onFilenameAppendChange}
                       />
                     </label>
                   </div>

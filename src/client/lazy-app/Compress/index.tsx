@@ -101,7 +101,7 @@ interface BulkProcessingSettings {
 
 interface FilenameSettings {
   enabled: boolean;
-  prepend: string;
+  append: string;
   rename: string;
 }
 
@@ -112,7 +112,7 @@ const defaultBulkProcessingSettings: BulkProcessingSettings = {
 
 const defaultFilenameSettings: FilenameSettings = {
   enabled: true,
-  prepend: '_sqsh',
+  append: '_sqsh',
   rename: '',
 };
 
@@ -142,6 +142,16 @@ const normalizeSideSettings = (
   filename: {
     ...defaults.filename,
     ...(settings && settings.filename),
+    append:
+      settings &&
+      settings.filename &&
+      (settings.filename as { append?: string }).append !== undefined
+        ? (settings.filename as { append?: string }).append
+        : settings &&
+          settings.filename &&
+          (settings.filename as { prepend?: string }).prepend !== undefined
+        ? (settings.filename as { prepend?: string }).prepend
+        : defaults.filename.append,
   },
 });
 
@@ -162,14 +172,17 @@ const getOutputFilename = (
 ): string => {
   if (!filenameSettings.enabled) return sourceFilename;
   const { base, ext } = splitFilename(sourceFilename);
-  const prepend = filenameSettings.prepend || '';
+  const append = filenameSettings.append || '';
   const rename = filenameSettings.rename || '';
   if (!rename) {
-    return `${base}${prepend}${ext}`;
+    return `${base}${append}${ext}`;
+  }
+  if (sequenceTotal <= 1) {
+    return `${rename}${append}${ext}`;
   }
   const digits = String(Math.max(1, sequenceTotal)).length;
   const sequence = String(sequenceIndex + 1).padStart(digits, '0');
-  return `${rename}_${sequence}${prepend}${ext}`;
+  return `${rename}_${sequence}${append}${ext}`;
 };
 
 async function processImage(

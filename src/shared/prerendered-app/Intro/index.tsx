@@ -374,7 +374,7 @@ export default class Intro extends Component<Props, State> {
                         dimensions!
                       </li>
                       <li>
-                        Batch rename processed files sequentially and/or prepend
+                        Batch rename processed files sequentially and/or append
                         custom text!
                       </li>
                     </ul>
