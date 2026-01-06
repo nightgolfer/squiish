@@ -29,6 +29,7 @@ Some thoughts on future modifications, but do keep in mind that this project is 
 - Add 'Resize to: Short edge' option in **Edit > Resize > Resize to**
 - Swap 'Download all X files' button and regular download button functionality (change the former to 'Download current file' and add more arrows to the latter).
 - Add better progress indicators ('Processing X', check off processed files on a list, spinning wheel, make interface inactive, percentage done indicator, etc.).
+- Dark mode?
 - ~~Make standalone app version ~~ (completed in v.0.1.3, wrapped with Electron for macOS)
 
 # Privacy
