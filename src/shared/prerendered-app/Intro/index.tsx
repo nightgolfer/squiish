@@ -11,6 +11,7 @@ import largePhotoIcon from 'url:./imgs/demos/icon-demo-large-photo.jpg';
 import artworkIcon from 'url:./imgs/demos/icon-demo-artwork.jpg';
 import deviceScreenIcon from 'url:./imgs/demos/icon-demo-device-screen.jpg';
 import smallSectionAsset from 'url:./imgs/info-content/small.svg';
+import bulkySectionAsset from 'url:static-build/assets/bulky.svg';
 import simpleSectionAsset from 'url:./imgs/info-content/simple.svg';
 import secureSectionAsset from 'url:./imgs/info-content/secure.svg';
 import logoIcon from 'url:./imgs/demos/icon-demo-logo.png';
@@ -362,6 +363,42 @@ export default class Intro extends Component<Props, State> {
             <SlideOnScroll>
               <div class={style.infoContent}>
                 <div class={style.infoTextWrapper}>
+                  <h2 class={style.infoTitle}>Bulky!</h2>
+                  <div class={style.infoCaption}>
+                    <ul>
+                      <li>
+                        Upload and process multiple images <i>in batches</i>!
+                      </li>
+                      <li>
+                        Batch resize proportionally based on long edge pixel
+                        dimensions!
+                      </li>
+                      <li>
+                        Batch rename processed files sequentially and/or prepend
+                        custom text!
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <div class={style.infoImgWrapper}>
+                  <img
+                    class={style.infoImg}
+                    src={bulkySectionAsset}
+                    alt="stack of photos"
+                    width="538"
+                    height="384"
+                  />
+                </div>
+              </div>
+            </SlideOnScroll>
+          </div>
+        </section>
+
+        <section class={style.info}>
+          <div class={style.infoContainer}>
+            <SlideOnScroll>
+              <div class={style.infoContent}>
+                <div class={style.infoTextWrapper}>
                   <h2 class={style.infoTitle}>Small</h2>
                   <p class={style.infoCaption}>
                     Smaller images mean faster load times. Squiish can reduce
@@ -416,7 +453,8 @@ export default class Intro extends Component<Props, State> {
                   <h2 class={style.infoTitle}>Secure</h2>
                   <p class={style.infoCaption}>
                     Worried about privacy? Images never leave your device since
-                    Squiish does all the work locally.
+                    Squiish does all the work locally. Also, Google telemetry
+                    has been stripped out 🤫.
                   </p>
                 </div>
                 <div class={style.infoImgWrapper}>
@@ -445,16 +483,16 @@ export default class Intro extends Component<Props, State> {
               <footer class={style.footerItems}>
                 <a
                   class={style.footerLink}
-                  href="https://github.com/GoogleChromeLabs/squoosh/blob/dev/README.md#privacy"
+                  href="https://github.com/nightgolfer/squiish/blob/dev/README.md#privacy"
                 >
                   Privacy
                 </a>
                 <a
                   class={style.footerLinkWithLogo}
-                  href="https://github.com/GoogleChromeLabs/squoosh"
+                  href="https://github.com/nightgolfer/squiish"
                 >
                   <img src={githubLogo} alt="" width="10" height="10" />
-                  Source on Github
+                  Fork source on Github
                 </a>
               </footer>
             </div>

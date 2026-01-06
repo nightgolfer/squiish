@@ -76,7 +76,7 @@ const toOutput: Output = {
       },
     ],
     description:
-      'Compress and compare images with different codecs, right in your browser.',
+      'Compress and compare images with different codecs, right in your browser - in bulk!',
     lang: 'en',
     categories: ['photo', 'productivity', 'utilities'],
     screenshots,

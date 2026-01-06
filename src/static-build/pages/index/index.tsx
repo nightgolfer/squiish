@@ -30,7 +30,7 @@ const Index: FunctionalComponent<Props> = () => (
       <title>Squiish</title>
       <meta
         name="description"
-        content="Squiish is the ultimate image optimizer that allows you to compress and compare images with different codecs in your browser - in bulk."
+        content="Squiish is the ultimate image optimizer that allows you to compress and compare images with different codecs in your browser - in bulk!"
       />
       <meta name="twitter:card" content="summary" />
       <meta name="twitter:site" content="@SquiishApp" />
@@ -50,7 +50,7 @@ const Index: FunctionalComponent<Props> = () => (
       />
       <meta
         name="og:description"
-        content="Squiish is the ultimate image optimizer that allows you to compress and compare images with different codecs in your browser - in bulk."
+        content="Squiish is the ultimate image optimizer that allows you to compress and compare images with different codecs in your browser - in bulk!"
       />
       <meta
         name="viewport"
