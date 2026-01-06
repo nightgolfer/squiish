@@ -19,7 +19,6 @@ In addition to the original Squoosh features, Squiish has been modified with the
 # Notes
 
 - I'm only running Squiish locally, for personal use. I have no idea how it will fare in an online environment; YMMV + use at own peril!
-- Only tested with JPG output and ~10 JPG file batches. Everything probably works, but I don't know for certain.
 - Completely vibe-coded with help from Codex/ChatGPT 5.2; less than ideal code is to be expected.
 
 # To-do / ideas
