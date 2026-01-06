@@ -4,6 +4,7 @@ node_modules
 *.css.d.ts
 build
 dist
+.codex-notes.yaml
 *.o
 .DS_Store
 .vscode/

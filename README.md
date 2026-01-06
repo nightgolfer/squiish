@@ -89,6 +89,10 @@ To package a standalone Electron app (macOS by default):
    ```sh
    npm run electron:dist
    ```
+   To output just the app bundle (no DMG/ZIP), run:
+   ```sh
+   npm run electron:dist:app
+   ```
 
 Artifacts are written to `dist/`. These instructions assume macOS; for
 Windows/Linux you generally need to build on the target OS. Packaged builds

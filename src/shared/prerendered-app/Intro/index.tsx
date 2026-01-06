@@ -8,7 +8,6 @@ import largePhoto from 'url:./imgs/demos/squiish-fox.jpg';
 import artwork from 'url:./imgs/demos/demo-artwork.jpg';
 import deviceScreen from 'url:./imgs/demos/demo-device-screen.png';
 import largePhotoIcon from 'url:./imgs/demos/icon-squiish-fox.jpg';
-import largePhotoIcon from 'url:./imgs/demos/icon-demo-large-photo.jpg';
 import artworkIcon from 'url:./imgs/demos/icon-demo-artwork.jpg';
 import deviceScreenIcon from 'url:./imgs/demos/icon-demo-device-screen.jpg';
 import smallSectionAsset from 'url:./imgs/info-content/small.svg';
@@ -26,7 +25,7 @@ import SlideOnScroll from './SlideOnScroll';
 const demos = [
   {
     description: 'Large photo',
-    size: '2.8MB',
+    size: '4.2MB',
     filename: 'photo.jpg',
     url: largePhoto,
     iconUrl: largePhotoIcon,
