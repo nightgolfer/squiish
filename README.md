@@ -1,4 +1,4 @@
-# Squiish! v.0.1.2
+# Squiish! v.0.1.3
 
 ![Squiish logo](src/shared/prerendered-app/Intro/imgs/logo-with-text.svg)
 
@@ -20,7 +20,7 @@ In addition to the original Squoosh features, Squiish has been modified with the
 
 - I'm only running Squiish locally, for personal use. I have no idea how it will fare in an online environment; YMMV + use at own peril!
 - Only tested with JPG output and ~10 JPG file batches. Everything probably works, but I don't know for certain.
-- Completely vibe-coded with Codex/ChatGPT 5.2; less than ideal code is to be expected.
+- Completely vibe-coded with help from Codex/ChatGPT 5.2; less than ideal code is to be expected.
 
 # To-do / ideas
 
@@ -29,6 +29,7 @@ Some thoughts on future modifications, but do keep in mind that this project is 
 - Add 'Resize to: Short edge' option in **Edit > Resize > Resize to**
 - Swap 'Download all X files' button and regular download button functionality (change the former to 'Download current file' and add more arrows to the latter).
 - Add better progress indicators ('Processing X', check off processed files on a list, spinning wheel, make interface inactive, percentage done indicator, etc.).
+- ~~Make standalone app version ~~ (completed in v.0.1.3, wrapped with Electron for macOS)
 
 # Privacy
 
@@ -53,7 +54,7 @@ The original version had Google telemetry included; this has been stripped out o
    ```
 5. (optional) To install as a PWA app, open app in chrome (default http://localhost/3060); there should be a buttom in the top right corner that says 'Install'. Keep in mind that the app still needs to be running for the PWA app to work.
 
-# Running locally (Electron)
+# Running locally (Electron app, macOS only)
 
 1. Clone the repository.
 2. To install node packages, from the install root dir run:
@@ -72,7 +73,7 @@ The original version had Google telemetry included; this has been stripped out o
 Downloads are saved to your system Downloads folder, and drag/drop from Finder
 is supported by the browser-based file drop UI.
 
-# Packaging Electron (standalone)
+# Packaging Electron (standalone app, macOS only)
 
 To package a standalone Electron app (macOS by default):
 
