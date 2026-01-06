@@ -1,4 +1,4 @@
-# Squiish! v.0.1.5
+# Squiish! v.0.1.7
 
 ![Squiish logo](src/shared/prerendered-app/Intro/imgs/logo-with-text.svg)
 

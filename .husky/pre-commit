@@ -2,4 +2,7 @@
 PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 export PATH
 
+node scripts/update-readme-version.js
+git add README.md
+
 npx lint-staged
