@@ -27,8 +27,11 @@ Some thoughts on future modifications, but do keep in mind that this project is 
 
 - Add 'Resize to: Short edge' option in **Edit > Resize > Resize to**.
 - Add 'Resize to: Height' and 'Resize to: Width' (scale all files proportionally to same height or width).
-- Dark mode?
+- Add option to also generate thumbnails (let user set long edge/short edge/width/height for thumbs). Probably a good idea to add ZIP option at the same time ...
 - ZIP download option?
+- add CHANGELOG.md
+- Dark mode?
+- ~~Make README.md version number match current version from package.json on commit.~~ (added in v.0.1.7)
 - ~~Swap 'Download all X files' button and regular download button functionality (change the former to 'Download current file' and add more arrows to the latter).~~ (swapped buttons in v.0.1.5)
 - ~~Add better progress indicators ('Processing X', check off processed files on a list, spinning wheel, make interface inactive, percentage done indicator, etc.).~~ (added spinners and disabling buttons while downloading in v.0.1.5)
 - ~~Launch on Vercel~~ (Squiish v.0.1.3 is now live on Vercel: https://squiish.vercel.app)
@@ -43,7 +46,7 @@ The original version had Google telemetry included; this has been stripped out o
 # Use online
 
 - You can use Squiish online here: https://squiish.vercel.app
-- (optional) Install the PWA from https://squiish.vercel.app by clicking on the 'Install' button in the top left corner (works in Chrome, untested in other browsers) to run it as a local app.
+- (optional) Install the PWA from https://squiish.vercel.app by clicking on the 'Install' button in the top right corner (works in Chrome, untested in other browsers) to run it as a local app.
 
 # Running locally (serve)
 
