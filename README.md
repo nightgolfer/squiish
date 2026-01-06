@@ -36,7 +36,7 @@ Squiish does not send your image to a server. All image compression processes lo
 
 The original version had Google telemetry included; this has been stripped out of Squiish.
 
-# Running locally (build)
+# Running locally (serve)
 
 1. Clone the repository.
 2. To install node packages, from the install root dir run:
@@ -52,6 +52,47 @@ The original version had Google telemetry included; this has been stripped out o
    npx serve -s build -l 3060
    ```
 5. (optional) To install as a PWA app, open app in chrome (default http://localhost/3060); there should be a buttom in the top right corner that says 'Install'. Keep in mind that the app still needs to be running for the PWA app to work.
+
+# Running locally (Electron)
+
+1. Clone the repository.
+2. To install node packages, from the install root dir run:
+   ```sh
+   npm install
+   ```
+3. Then build the app by running:
+   ```sh
+   npm run build
+   ```
+4. Launch the Electron wrapper:
+   ```sh
+   npm run electron
+   ```
+
+Downloads are saved to your system Downloads folder, and drag/drop from Finder
+is supported by the browser-based file drop UI.
+
+# Packaging Electron (standalone)
+
+To package a standalone Electron app (macOS by default):
+
+1. Install dependencies:
+   ```sh
+   npm install
+   ```
+2. Build the app:
+   ```sh
+   npm run build
+   ```
+3. Create a distributable:
+   ```sh
+   npm run electron:dist
+   ```
+
+Artifacts are written to `dist/`. These instructions assume macOS; for
+Windows/Linux you generally need to build on the target OS. On macOS,
+signing/notarization is optional for local use but required for clean
+distribution.
 
 # Developing (unaltered from original README.md; YMMV!)
 
@@ -70,22 +111,6 @@ To develop for Squoosh:
    ```sh
    npm run dev
    ```
-
-# Electron (macOS app wrapper)
-
-To run the app as a local Electron wrapper (no manual server start):
-
-1. Build the app:
-   ```sh
-   npm run build
-   ```
-2. Launch Electron:
-   ```sh
-   npm run electron
-   ```
-
-Downloads are saved to your system Downloads folder, and drag/drop from Finder
-is supported by the browser-based file drop UI.
 
 # Contributing to (original) Squoosh
 

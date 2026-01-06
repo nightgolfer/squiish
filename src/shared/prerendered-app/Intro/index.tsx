@@ -453,9 +453,10 @@ export default class Intro extends Component<Props, State> {
                   <h2 class={style.infoTitle}>Secure</h2>
                   <p class={style.infoCaption}>
                     Worried about privacy? Images never leave your device since
-                    Squiish does all the work locally.{' '}
+                    Squiish does all the work locally.
+                    <br />
                     <small>
-                      Also, Google telemetry has been stripped out 🤫
+                      Also, Google telemetry has been stripped out ❤️
                     </small>
                   </p>
                 </div>
