@@ -1,15 +1,30 @@
-const { app, BrowserWindow, session } = require('electron');
+const { app, BrowserWindow, session, nativeImage } = require('electron');
 const http = require('http');
 const path = require('path');
 const fs = require('fs');
+const { parse } = require('url');
 const serveHandler = require('serve-handler');
 
+const pkg = require('../package.json');
+
 const BUILD_DIR = path.join(__dirname, '..', 'build');
+const ICON_PATH = path.join(
+  __dirname,
+  '..',
+  'src',
+  'static-build',
+  'assets',
+  'squiish-icon.png',
+);
 const HEADERS = {
   'Cache-Control': 'no-cache',
   'Cross-Origin-Embedder-Policy': 'require-corp',
   'Cross-Origin-Opener-Policy': 'same-origin',
 };
+const APP_NAME = `Squiish v.${pkg.version}`;
+
+app.name = APP_NAME;
+app.setName(APP_NAME);
 
 function ensureBuildExists() {
   if (!fs.existsSync(BUILD_DIR)) {
@@ -41,20 +56,39 @@ function uniqueDownloadPath(dir, fileName) {
 
 function startStaticServer() {
   ensureBuildExists();
+  const indexHtml = path.join(BUILD_DIR, 'index.html');
 
   const server = http.createServer((req, res) => {
     withHeaders(res);
 
-    if (req.url === '/editor') {
+    const { pathname } = parse(req.url || '/', false);
+
+    if (pathname === '/editor') {
       res.statusCode = 302;
       res.setHeader('Location', '/');
       res.end();
       return;
     }
 
+    if (pathname === '/' || pathname === '/index.html') {
+      fs.readFile(indexHtml, (err, data) => {
+        if (err) {
+          res.statusCode = 500;
+          res.end('Failed to load index.html');
+          return;
+        }
+
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'text/html; charset=utf-8');
+        res.end(data);
+      });
+      return;
+    }
+
     serveHandler(req, res, {
       public: BUILD_DIR,
       cleanUrls: false,
+      directoryListing: false,
     });
   });
 
@@ -71,6 +105,8 @@ async function createWindow() {
   const win = new BrowserWindow({
     width: 1200,
     height: 900,
+    title: APP_NAME,
+    icon: fs.existsSync(ICON_PATH) ? ICON_PATH : undefined,
     webPreferences: {
       contextIsolation: true,
       sandbox: true,
@@ -87,6 +123,10 @@ async function createWindow() {
 }
 
 app.whenReady().then(() => {
+  app.setAboutPanelOptions({ applicationName: APP_NAME });
+  if (process.platform === 'darwin' && fs.existsSync(ICON_PATH)) {
+    app.dock.setIcon(nativeImage.createFromPath(ICON_PATH));
+  }
   createWindow();
 
   app.on('activate', () => {

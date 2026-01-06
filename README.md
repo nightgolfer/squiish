@@ -1,4 +1,4 @@
-# Squiish! v.0.1.0
+# Squiish! v.0.1.2
 
 ![Squiish logo](src/shared/prerendered-app/Intro/imgs/logo-with-text.svg)
 
@@ -36,7 +36,7 @@ Squiish does not send your image to a server. All image compression processes lo
 
 The original version had Google telemetry included; this has been stripped out of Squiish.
 
-# Running locally
+# Running locally (build)
 
 1. Clone the repository.
 2. To install node packages, from the install root dir run:

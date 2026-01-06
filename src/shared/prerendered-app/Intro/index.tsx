@@ -453,8 +453,10 @@ export default class Intro extends Component<Props, State> {
                   <h2 class={style.infoTitle}>Secure</h2>
                   <p class={style.infoCaption}>
                     Worried about privacy? Images never leave your device since
-                    Squiish does all the work locally. Also, Google telemetry
-                    has been stripped out 🤫.
+                    Squiish does all the work locally.{' '}
+                    <small>
+                      Also, Google telemetry has been stripped out 🤫
+                    </small>
                   </p>
                 </div>
                 <div class={style.infoImgWrapper}>
@@ -481,6 +483,8 @@ export default class Intro extends Component<Props, State> {
             </svg>
             <div class={style.footerPadding}>
               <footer class={style.footerItems}>
+                <span>{`Squiish v.${__APP_VERSION__}`}</span>
+
                 <a
                   class={style.footerLink}
                   href="https://github.com/nightgolfer/squiish/blob/dev/README.md#privacy"

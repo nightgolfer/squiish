@@ -68,6 +68,9 @@ export default async function ({ watch }) {
     path.join(__dirname, 'lib', 'omt.ejs'),
     'utf-8',
   );
+  const pkg = JSON.parse(
+    await fsp.readFile(path.join(__dirname, 'package.json'), 'utf-8'),
+  );
 
   await del('.tmp/build');
 
@@ -127,7 +130,11 @@ export default async function ({ watch }) {
             ...commonPlugins(),
             commonjs(),
             resolve(),
-            replace({ __PRERENDER__: false, __PRODUCTION__: isProduction }),
+            replace({
+              __PRERENDER__: false,
+              __PRODUCTION__: isProduction,
+              __APP_VERSION__: JSON.stringify(pkg.version),
+            }),
             entryDataPlugin(),
             isProduction ? terser({ module: true }) : {},
           ],
@@ -148,7 +155,11 @@ export default async function ({ watch }) {
       emitFiles({ include: '**/*', root: path.join(__dirname, 'src', 'copy') }),
       nodeExternalPlugin(),
       featurePlugin(),
-      replace({ __PRERENDER__: true, __PRODUCTION__: isProduction }),
+      replace({
+        __PRERENDER__: true,
+        __PRODUCTION__: isProduction,
+        __APP_VERSION__: JSON.stringify(pkg.version),
+      }),
       initialCssPlugin(),
       runScript(dir + '/static-build/index.js'),
     ],

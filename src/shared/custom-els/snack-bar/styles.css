@@ -13,7 +13,7 @@ snack-bar {
   display: flex;
   box-sizing: border-box;
   left: 50%;
-  bottom: 24px;
+  bottom: 50px;
   width: 344px;
   margin-left: -172px;
   background: #2a2a2a;

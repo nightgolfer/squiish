@@ -60,3 +60,4 @@ declare var ga: {
 };
 
 declare const __PRODUCTION__: boolean;
+declare const __APP_VERSION__: string;
