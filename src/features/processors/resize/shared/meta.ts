@@ -40,6 +40,8 @@ export interface ResizeOptionsCommon {
   width: number;
   height: number;
   fitMethod: 'stretch' | 'contain';
+  sizeMode: 'dimensions' | 'longest-side';
+  longestSide: number;
 }
 
 export interface BrowserResizeOptions extends ResizeOptionsCommon {
@@ -61,9 +63,12 @@ export const defaultOptions: Options = {
   // This is set elsewhere.
   width: 1,
   height: 1,
+  // Longest side defaults to the image's max dimension.
+  longestSide: 1,
   // This will be set to 'vector' if the input is SVG.
   method: 'lanczos3',
   fitMethod: 'stretch',
+  sizeMode: 'longest-side',
   premultiply: true,
   linearRGB: true,
 };

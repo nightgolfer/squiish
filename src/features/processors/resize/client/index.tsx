@@ -36,6 +36,42 @@ function isWorkerOptions(opts: ResizeOptions): opts is WorkerResizeOptions {
   return (workerResizeMethods as string[]).includes(opts.method);
 }
 
+function resolveResizeOptions(
+  source: SourceImage,
+  options: ResizeOptions,
+): ResizeOptions {
+  if (options.sizeMode !== 'longest-side') {
+    return { ...options, sizeMode: 'dimensions' };
+  }
+
+  const baseWidth =
+    options.method === 'vector' && source.vectorImage
+      ? source.vectorImage.width
+      : source.preprocessed.width;
+  const baseHeight =
+    options.method === 'vector' && source.vectorImage
+      ? source.vectorImage.height
+      : source.preprocessed.height;
+  const longestSide = Math.max(
+    1,
+    Math.min(9999, Math.round(options.longestSide)),
+  );
+  const isLandscape = baseWidth >= baseHeight;
+  const width = isLandscape
+    ? longestSide
+    : Math.max(1, Math.round((longestSide * baseWidth) / baseHeight));
+  const height = isLandscape
+    ? Math.max(1, Math.round((longestSide * baseHeight) / baseWidth))
+    : longestSide;
+
+  return {
+    ...options,
+    width,
+    height,
+    fitMethod: 'stretch',
+  };
+}
+
 function browserResize(data: ImageData, opts: BrowserResizeOptions): ImageData {
   let sx = 0;
   let sy = 0;
@@ -87,14 +123,55 @@ export async function resize(
   options: ResizeOptions,
   workerBridge: WorkerBridge,
 ) {
+  const resolvedOptions = resolveResizeOptions(source, options);
   if (options.method === 'vector') {
     if (!source.vectorImage) throw Error('No vector image available');
-    return vectorResize(source.vectorImage, options);
+    return vectorResize(
+      source.vectorImage,
+      resolvedOptions as VectorResizeOptions,
+    );
   }
-  if (isWorkerOptions(options)) {
-    return workerBridge.resize(signal, source.preprocessed, options);
+  if (isWorkerOptions(resolvedOptions)) {
+    try {
+      return await workerBridge.resize(
+        signal,
+        source.preprocessed,
+        resolvedOptions,
+      );
+    } catch (error) {
+      const message =
+        error && typeof (error as Error).message === 'string'
+          ? (error as Error).message
+          : '';
+      const name =
+        error && typeof (error as Error).name === 'string'
+          ? (error as Error).name
+          : '';
+      if (
+        message.includes('offset is out of bounds') ||
+        name === 'RangeError'
+      ) {
+        const fallbackOptions: BrowserResizeOptions = {
+          width: resolvedOptions.width,
+          height: resolvedOptions.height,
+          fitMethod: resolvedOptions.fitMethod,
+          sizeMode: resolvedOptions.sizeMode,
+          longestSide: resolvedOptions.longestSide,
+          method: 'browser-high',
+        };
+        console.warn(
+          'Resize worker failed; falling back to browser resize.',
+          error,
+        );
+        return browserResize(source.preprocessed, fallbackOptions);
+      }
+      throw error;
+    }
   }
-  return browserResize(source.preprocessed, options);
+  return browserResize(
+    source.preprocessed,
+    resolvedOptions as BrowserResizeOptions,
+  );
 }
 
 interface Props {
@@ -127,23 +204,39 @@ export class Options extends Component<Props, State> {
 
   private reportOptions() {
     const form = this.form!;
+    const sizeMode = inputFieldValue(
+      form.sizeMode,
+      this.props.options.sizeMode,
+    ) as ResizeOptions['sizeMode'];
     const width = form.width as HTMLInputElement;
     const height = form.height as HTMLInputElement;
+    const longestSide = form.longestSide as HTMLInputElement;
     const { options } = this.props;
 
-    if (!width.checkValidity() || !height.checkValidity()) return;
+    if (
+      sizeMode === 'dimensions' &&
+      (!width.checkValidity() || !height.checkValidity())
+    )
+      return;
+
+    if (sizeMode === 'longest-side' && !longestSide.checkValidity()) return;
 
     const newOptions: ResizeOptions = {
       width: inputFieldValueAsNumber(width),
       height: inputFieldValueAsNumber(height),
+      longestSide: inputFieldValueAsNumber(longestSide),
       method: form.resizeMethod.value,
       premultiply: inputFieldChecked(form.premultiply, true),
       linearRGB: inputFieldChecked(form.linearRGB, true),
       // Casting, as the formfield only returns the correct values.
-      fitMethod: inputFieldValue(
-        form.fitMethod,
-        options.fitMethod,
-      ) as ResizeOptions['fitMethod'],
+      fitMethod:
+        sizeMode === 'longest-side'
+          ? 'stretch'
+          : (inputFieldValue(
+              form.fitMethod,
+              options.fitMethod,
+            ) as ResizeOptions['fitMethod']),
+      sizeMode,
     };
     this.props.onChange(newOptions);
   }
@@ -200,6 +293,8 @@ export class Options extends Component<Props, State> {
   }
 
   private getPreset(): number | string {
+    const sizeMode = this.props.options.sizeMode || 'longest-side';
+    if (sizeMode !== 'dimensions') return 'custom';
     const { width, height } = this.props.options;
 
     for (const preset of sizePresets) {
@@ -225,6 +320,7 @@ export class Options extends Component<Props, State> {
   };
 
   render({ options, isVector }: Props, { maintainAspect }: State) {
+    const sizeMode = options.sizeMode || 'longest-side';
     return (
       <form
         ref={linkRef(this, 'form')}
@@ -251,38 +347,76 @@ export class Options extends Component<Props, State> {
           </Select>
         </label>
         <label class={style.optionTextFirst}>
-          Preset:
-          <Select value={this.getPreset()} onChange={this.onPresetChange}>
-            {sizePresets.map((preset) => (
-              <option value={preset}>{preset * 100}%</option>
-            ))}
-            <option value="custom">Custom</option>
+          Resize to:
+          <Select name="sizeMode" value={sizeMode} onChange={this.onChange}>
+            <option value="dimensions">Width &amp; height</option>
+            <option value="longest-side">Long edge</option>
           </Select>
         </label>
-        <label class={style.optionTextFirst}>
-          Width:
+        {sizeMode === 'dimensions' ? (
+          <label class={style.optionTextFirst}>
+            Preset:
+            <Select value={this.getPreset()} onChange={this.onPresetChange}>
+              {sizePresets.map((preset) => (
+                <option value={preset}>{preset * 100}%</option>
+              ))}
+              <option value="custom">Custom</option>
+            </Select>
+          </label>
+        ) : null}
+        {sizeMode === 'dimensions' ? (
+          <label class={style.optionTextFirst}>
+            Width:
+            <input
+              required
+              class={style.textField}
+              name="width"
+              type="number"
+              min="1"
+              value={'' + options.width}
+              onInput={this.onWidthInput}
+            />
+          </label>
+        ) : (
+          <input name="width" type="hidden" value={'' + options.width} />
+        )}
+        {sizeMode === 'dimensions' ? (
+          <label class={style.optionTextFirst}>
+            Height:
+            <input
+              required
+              class={style.textField}
+              name="height"
+              type="number"
+              min="1"
+              value={'' + options.height}
+              onInput={this.onHeightInput}
+            />
+          </label>
+        ) : (
+          <input name="height" type="hidden" value={'' + options.height} />
+        )}
+        {sizeMode === 'longest-side' ? (
+          <label class={style.optionTextFirst}>
+            Long edge:
+            <input
+              required
+              class={style.textField}
+              name="longestSide"
+              type="number"
+              min="1"
+              max="9999"
+              value={'' + options.longestSide}
+              onInput={this.onChange}
+            />
+          </label>
+        ) : (
           <input
-            required
-            class={style.textField}
-            name="width"
-            type="number"
-            min="1"
-            value={'' + options.width}
-            onInput={this.onWidthInput}
+            name="longestSide"
+            type="hidden"
+            value={'' + options.longestSide}
           />
-        </label>
-        <label class={style.optionTextFirst}>
-          Height:
-          <input
-            required
-            class={style.textField}
-            name="height"
-            type="number"
-            min="1"
-            value={'' + options.height}
-            onInput={this.onHeightInput}
-          />
-        </label>
+        )}
         <Expander>
           {isWorkerOptions(options) ? (
             <label class={style.optionToggle}>
@@ -305,29 +439,33 @@ export class Options extends Component<Props, State> {
             </label>
           ) : null}
         </Expander>
-        <label class={style.optionToggle}>
-          Maintain aspect ratio
-          <Checkbox
-            name="maintainAspect"
-            checked={maintainAspect}
-            onChange={linkState(this, 'maintainAspect')}
-          />
-        </label>
-        <Expander>
-          {maintainAspect ? null : (
-            <label class={style.optionTextFirst}>
-              Fit method:
-              <Select
-                name="fitMethod"
-                value={options.fitMethod}
-                onChange={this.onChange}
-              >
-                <option value="stretch">Stretch</option>
-                <option value="contain">Contain</option>
-              </Select>
-            </label>
-          )}
-        </Expander>
+        {sizeMode === 'dimensions' ? (
+          <label class={style.optionToggle}>
+            Maintain aspect ratio
+            <Checkbox
+              name="maintainAspect"
+              checked={maintainAspect}
+              onChange={linkState(this, 'maintainAspect')}
+            />
+          </label>
+        ) : null}
+        {sizeMode === 'dimensions' ? (
+          <Expander>
+            {maintainAspect ? null : (
+              <label class={style.optionTextFirst}>
+                Fit method:
+                <Select
+                  name="fitMethod"
+                  value={options.fitMethod}
+                  onChange={this.onChange}
+                >
+                  <option value="stretch">Stretch</option>
+                  <option value="contain">Contain</option>
+                </Select>
+              </label>
+            )}
+          </Expander>
+        ) : null}
       </form>
     );
   }

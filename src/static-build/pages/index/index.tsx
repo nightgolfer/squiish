@@ -27,14 +27,14 @@ interface Props {}
 const Index: FunctionalComponent<Props> = () => (
   <html lang="en">
     <head>
-      <title>Squoosh</title>
+      <title>Squiish</title>
       <meta
         name="description"
-        content="Squoosh is the ultimate image optimizer that allows you to compress and compare images with different codecs in your browser."
+        content="Squiish is the ultimate image optimizer that allows you to compress and compare images with different codecs in your browser - in bulk."
       />
       <meta name="twitter:card" content="summary" />
-      <meta name="twitter:site" content="@SquooshApp" />
-      <meta property="og:title" content="Squoosh" />
+      <meta name="twitter:site" content="@SquiishApp" />
+      <meta property="og:title" content="Squiish" />
       <meta property="og:type" content="website" />
       <meta property="og:image" content={`${siteOrigin}${ogImage}`} />
       <meta
@@ -50,7 +50,7 @@ const Index: FunctionalComponent<Props> = () => (
       />
       <meta
         name="og:description"
-        content="Squoosh is the ultimate image optimizer that allows you to compress and compare images with different codecs in your browser."
+        content="Squiish is the ultimate image optimizer that allows you to compress and compare images with different codecs in your browser - in bulk."
       />
       <meta
         name="viewport"

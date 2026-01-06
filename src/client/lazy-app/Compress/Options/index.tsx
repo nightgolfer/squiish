@@ -25,12 +25,30 @@ interface Props {
   source?: SourceImage;
   encoderState?: EncoderState;
   processorState: ProcessorState;
+  bulkProcessing: BulkProcessingSettings;
+  filenameSettings: FilenameSettings;
   onEncoderTypeChange(index: 0 | 1, newType: OutputType): void;
   onEncoderOptionsChange(index: 0 | 1, newOptions: EncoderOptions): void;
   onProcessorOptionsChange(index: 0 | 1, newOptions: ProcessorState): void;
+  onBulkProcessingOptionsChange(
+    index: 0 | 1,
+    newOptions: BulkProcessingSettings,
+  ): void;
+  onFilenameOptionsChange(index: 0 | 1, newOptions: FilenameSettings): void;
   onCopyToOtherSideClick(index: 0 | 1): void;
   onSaveSideSettingsClick(index: 0 | 1): void;
   onImportSideSettingsClick(index: 0 | 1): void;
+}
+
+interface BulkProcessingSettings {
+  enabled: boolean;
+  batchSize: number;
+}
+
+interface FilenameSettings {
+  enabled: boolean;
+  prepend: string;
+  rename: string;
 }
 
 interface State {
@@ -135,6 +153,46 @@ export default class Options extends Component<Props, State> {
     this.props.onEncoderOptionsChange(this.props.index, newOptions);
   };
 
+  private onBulkProcessingEnabledChange = (event: Event) => {
+    const el = event.currentTarget as HTMLInputElement;
+    this.props.onBulkProcessingOptionsChange(this.props.index, {
+      ...this.props.bulkProcessing,
+      enabled: el.checked,
+    });
+  };
+
+  private onBulkBatchSizeChange = (event: Event) => {
+    const el = event.currentTarget as HTMLInputElement;
+    this.props.onBulkProcessingOptionsChange(this.props.index, {
+      ...this.props.bulkProcessing,
+      batchSize: Number(el.value),
+    });
+  };
+
+  private onFilenameEnabledChange = (event: Event) => {
+    const el = event.currentTarget as HTMLInputElement;
+    this.props.onFilenameOptionsChange(this.props.index, {
+      ...this.props.filenameSettings,
+      enabled: el.checked,
+    });
+  };
+
+  private onFilenamePrependChange = (event: Event) => {
+    const el = event.currentTarget as HTMLInputElement;
+    this.props.onFilenameOptionsChange(this.props.index, {
+      ...this.props.filenameSettings,
+      prepend: el.value,
+    });
+  };
+
+  private onFilenameRenameChange = (event: Event) => {
+    const el = event.currentTarget as HTMLInputElement;
+    this.props.onFilenameOptionsChange(this.props.index, {
+      ...this.props.filenameSettings,
+      rename: el.value,
+    });
+  };
+
   private onCopyToOtherSideClick = () => {
     this.props.onCopyToOtherSideClick(this.props.index);
   };
@@ -148,7 +206,13 @@ export default class Options extends Component<Props, State> {
   };
 
   render(
-    { source, encoderState, processorState }: Props,
+    {
+      source,
+      encoderState,
+      processorState,
+      bulkProcessing,
+      filenameSettings,
+    }: Props,
     { supportedEncoderMap }: State,
   ) {
     const encoder = encoderState && encoderMap[encoderState.type];
@@ -242,6 +306,69 @@ export default class Options extends Component<Props, State> {
                     options={processorState.quantize}
                     onChange={this.onQuantizerOptionsChange}
                   />
+                ) : null}
+              </Expander>
+
+              <label class={style.sectionEnabler}>
+                Bulk processing
+                <Toggle
+                  name="bulk.enable"
+                  checked={bulkProcessing.enabled}
+                  onChange={this.onBulkProcessingEnabledChange}
+                />
+              </label>
+              <Expander>
+                {bulkProcessing.enabled ? (
+                  <div class={style.optionsSection}>
+                    <label class={style.optionTextFirst}>
+                      Batch size:
+                      <input
+                        required
+                        class={style.textField}
+                        name="bulkBatchSize"
+                        type="number"
+                        min="1"
+                        value={'' + bulkProcessing.batchSize}
+                        onInput={this.onBulkBatchSizeChange}
+                      />
+                    </label>
+                  </div>
+                ) : null}
+              </Expander>
+
+              <label class={style.sectionEnabler}>
+                Filename
+                <Toggle
+                  name="filename.enable"
+                  checked={filenameSettings.enabled}
+                  onChange={this.onFilenameEnabledChange}
+                />
+              </label>
+              <Expander>
+                {filenameSettings.enabled ? (
+                  <div class={style.optionsSection}>
+                    <label class={style.optionTextFirst}>
+                      Rename:
+                      <input
+                        class={style.textField}
+                        name="filenameRename"
+                        type="text"
+                        maxLength={200}
+                        value={filenameSettings.rename}
+                        onInput={this.onFilenameRenameChange}
+                      />
+                    </label>
+                    <label class={style.optionTextFirst}>
+                      Prepend:
+                      <input
+                        class={style.textField}
+                        name="filenamePrepend"
+                        type="text"
+                        value={filenameSettings.prepend}
+                        onInput={this.onFilenamePrependChange}
+                      />
+                    </label>
+                  </div>
                 ) : null}
               </Expander>
             </div>

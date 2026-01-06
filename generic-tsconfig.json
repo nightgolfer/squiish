@@ -19,6 +19,8 @@
       "shared/*": ["src/shared/*"],
       "features/*": ["src/features/*"],
       "worker-shared/*": ["src/worker-shared/*"]
-    }
+    },
+    "lib": ["DOM", "DOM.Iterable", "ES2019"],
+    "skipLibCheck": true
   }
 }

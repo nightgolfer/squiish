@@ -5,7 +5,7 @@
 - **processors** - change images, generally in a way that potentially aids compression.
 - **preprocessors** - prepares the image for handling.
 
-The key difference between preprocessors and processors is each 'side' in Squoosh can process differently, whereas a preprocessor happens to both sides.
+The key difference between preprocessors and processors is each 'side' in Squiish can process differently, whereas a preprocessor happens to both sides.
 
 # Adding code to the worker
 

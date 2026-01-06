@@ -88,13 +88,13 @@ export default class Intro extends Component<Props, State> {
   private installingViaButton = false;
 
   componentDidMount() {
-    // Listen for beforeinstallprompt events, indicating Squoosh is installable.
+    // Listen for beforeinstallprompt events, indicating Squiish is installable.
     window.addEventListener(
       'beforeinstallprompt',
       this.onBeforeInstallPromptEvent,
     );
 
-    // Listen for the appinstalled event, indicating Squoosh has been installed.
+    // Listen for the appinstalled event, indicating Squiish has been installed.
     window.addEventListener('appinstalled', this.onAppInstalled);
 
     if (blobAnimImport) {
@@ -251,7 +251,7 @@ export default class Intro extends Component<Props, State> {
             <img
               class={style.logo}
               src={logoWithText}
-              alt="Squoosh"
+              alt="Squiish"
               width="539"
               height="162"
             />
@@ -364,7 +364,7 @@ export default class Intro extends Component<Props, State> {
                 <div class={style.infoTextWrapper}>
                   <h2 class={style.infoTitle}>Small</h2>
                   <p class={style.infoCaption}>
-                    Smaller images mean faster load times. Squoosh can reduce
+                    Smaller images mean faster load times. Squiish can reduce
                     file size and maintain high quality.
                   </p>
                 </div>
@@ -416,7 +416,7 @@ export default class Intro extends Component<Props, State> {
                   <h2 class={style.infoTitle}>Secure</h2>
                   <p class={style.infoCaption}>
                     Worried about privacy? Images never leave your device since
-                    Squoosh does all the work locally.
+                    Squiish does all the work locally.
                   </p>
                 </div>
                 <div class={style.infoImgWrapper}>
